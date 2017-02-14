@@ -10,7 +10,7 @@ var cron = require('node-cron');
 //runs every 1 min
 cron.schedule('*/1 * * * *', function(){
 	console.log(Date())
-  callRequest()
+  callRequest();
 });
 
 
