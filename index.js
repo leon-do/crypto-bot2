@@ -50,9 +50,11 @@ function updateDB(coinArr){
 	  		for (var key in coinArr){
 	  			db.collection('botCollections').update({index:key}, {$set:{price:coinArr[key].price}})
 			}
+
+			mongoMath(db)
+
 		});	
 
-		mongoMath(db)
 	})
 }
 
@@ -75,14 +77,17 @@ function mongoMath(db){
 		}
 
 		for (var key in data){
-			var currentPrice = data[key].price
-			var pastPrice = data[key].pastPrice
-			if ((currentPrice - pastPrice)/currentPrice > highestCoin.change){
+			var currentPrice = parseFloat(data[key].price)
+			console.log(currentPrice)
+			var pastPrice = parseFloat(data[key].pastPrice)
+			console.log(pastPrice)
+
+			if (((currentPrice - pastPrice)/currentPrice) > highestCoin.change){
 				highestCoin.change = (currentPrice - pastPrice)/currentPrice;
 				highestCoin.name = data[key].short
 			}
 
-			if ((currentPrice - pastPrice)/currentPrice < lowestCoin.change) {
+			if (((currentPrice - pastPrice)/currentPrice) < lowestCoin.change) {
 				lowestCoin.change = (currentPrice - pastPrice)/currentPrice;
 				lowestCoin.name = data[key].short
 			}
