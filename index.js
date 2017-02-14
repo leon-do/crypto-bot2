@@ -3,13 +3,26 @@ var rp = require('request-promise');
 var MongoClient = require('mongodb').MongoClient
 var express = require('express');
 var app = express();
+var cron = require('node-cron');
+
+
+// ================CRON=============================================
+//runs every 1 min
+cron.schedule('*/1 * * * *', function(){
+	console.log(Date())
+  callRequest()
+});
+
+
 
 
 // ================CALL=============================================
+function callRequest(){
 rp({uri:"http://www.coincap.io/front"})
     .then(function (data) {
         filterData(JSON.parse(data));
 	})
+}
 
 
 
@@ -80,9 +93,7 @@ function mongoMath(db){
 
 		for (var key in data){
 			var currentPrice = parseFloat(data[key].price)
-			console.log(currentPrice)
 			var pastPrice = parseFloat(data[key].pastPrice)
-			console.log(pastPrice)
 
 			if (((currentPrice - pastPrice)/currentPrice) > highestCoin.change){
 				highestCoin.change = (currentPrice - pastPrice)/currentPrice;
