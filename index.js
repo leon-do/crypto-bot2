@@ -1,6 +1,8 @@
 var request = require("request")
 var rp = require('request-promise');
 var MongoClient = require('mongodb').MongoClient
+var express = require('express');
+var app = express();
 
 
 // ================CALL=============================================
@@ -95,7 +97,19 @@ function mongoMath(db){
 
 		console.log(highestCoin)
 		console.log(lowestCoin)
+		putOnPage(highestCoin,lowestCoin)
 
 	})
 
 }
+
+
+
+
+function putOnPage(highestCoin, lowestCoin){
+	app.get('/', function (req, res) {
+	  res.send([highestCoin, lowestCoin])
+	})
+}
+
+app.listen(3000)
