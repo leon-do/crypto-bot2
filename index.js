@@ -1,9 +1,9 @@
 var request = require("request")
 var rp = require('request-promise');
 var MongoClient = require('mongodb').MongoClient
-var express = require('express');
-var app = express();
 var cron = require('node-cron');
+var Nightmare = require('nightmare');		
+var nightmare = Nightmare({ show: true });
 
 
 // ================CRON=============================================
@@ -108,7 +108,7 @@ function mongoMath(db){
 
 		console.log(highestCoin)
 		console.log(lowestCoin)
-		putOnPage(highestCoin,lowestCoin)
+		startNightmare(highestCoin,lowestCoin)
 
 	})
 
@@ -117,10 +117,24 @@ function mongoMath(db){
 
 
 
-function putOnPage(highestCoin, lowestCoin){
-	app.get('/', function (req, res) {
-	  res.send([highestCoin, lowestCoin])
-	})
-}
+// ================NIGHTMARE=============================================
 
-app.listen(3000)
+function startNightmare(highestCoin, lowestCoin){
+
+	
+
+	nightmare
+	  .goto('http://localhost:8000')
+	  .wait('#transfer-button > span')
+	  .wait(3000)
+	  .type('#input_6', 55)
+	  .wait(3000)
+	  .click("#select_option_13 > div.md-text.ng-binding")
+	  .wait(3000)
+	  .click('#select_option_7 > div.md-text.ng-binding')
+	  .wait(3000)
+	  .click('#transfer-button > span')
+	  .catch(function (error) {
+	    console.error('Search failed:', error);
+	  });
+}
