@@ -38,6 +38,7 @@ function updateDB(coinArr){
 	// Use connect method to connect to the server
 	MongoClient.connect('mongodb://localhost:27017/test', function(err, db) {
 
+		// get all data from database
 	  	db.collection('botCollections').find().toArray(function(err, data) {
 
 	  		//move price column to pastPrice column
