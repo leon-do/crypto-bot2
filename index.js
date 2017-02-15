@@ -19,7 +19,7 @@ nightmare
 
 // ================CRON=============================================
 //runs every 1 min
-cron.schedule('*/1 * * * *', function(){
+cron.schedule('*/30 * * * * *', function(){
 	console.log(Date())
   callRequest();
 });
