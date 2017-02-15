@@ -18,7 +18,7 @@ nightmare
 
 
 // ================CRON=============================================
-//runs every 1 min
+//runs every 30 second
 cron.schedule('*/30 * * * * *', function(){
 	console.log(Date())
   callRequest();
