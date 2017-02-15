@@ -5,6 +5,17 @@ var cron = require('node-cron');
 var Nightmare = require('nightmare');		
 var nightmare = Nightmare({ show: true });
 
+// ================LOG USING NIGHTMARE=============================================
+nightmare
+	  .goto('http://localhost:8000') //go to site
+	  .wait('body > a:nth-child(1)') //wait link appears on the screen
+	  .wait(3000)
+	  .click('body > a:nth-child(1)') // click link
+	  .wait('body > ng-view > form > div:nth-child(3) > input[type="submit"]') //wait until button appears on screen
+	  .type('body > ng-view > form > div:nth-child(1) > input', "leon")
+	  .type('body > ng-view > form > div:nth-child(2) > input', 'password')
+	  .click('body > ng-view > form > div:nth-child(3) > input[type="submit"]')
+
 
 // ================CRON=============================================
 //runs every 1 min
@@ -106,9 +117,12 @@ function mongoMath(db){
 			}
 		}
 
+		//{ name: 'LSK', change: 0.003942627965467904 }
 		console.log(highestCoin)
-		console.log(lowestCoin)
-		startNightmare(highestCoin,lowestCoin)
+		// { name: 'BTC', change: -0.006667927269832153 } 
+		console.log(lowestCoin)	
+
+		nightmareTransaction(highestCoin,lowestCoin)
 
 	})
 
@@ -117,24 +131,30 @@ function mongoMath(db){
 
 
 
-// ================NIGHTMARE=============================================
+// ================NIGHTMARE TRANSACTION=============================================
 
-function startNightmare(highestCoin, lowestCoin){
+function nightmareTransaction(highestCoin, lowestCoin){
+		
+		var dropDownArray = ['USD', 'BTC', 'ETH', 'XRP', 'LTC', 'XMR', 'ETC', 'DASH', 'MAID', 'DOGE', 'ZEC', 'LSK']
+		
+		var pathNumber = dropDownArray.indexOf(highestCoin.name) + 14
 
-	
+		var dropDownPath ='#select_option_' + pathNumber + ' > div.md-text.ng-binding'
 
-	nightmare
-	  .goto('http://localhost:8000')
-	  .wait('#transfer-button > span')
-	  .wait(3000)
-	  .type('#input_6', 55)
-	  .wait(3000)
-	  .click("#select_option_13 > div.md-text.ng-binding")
-	  .wait(3000)
-	  .click('#select_option_7 > div.md-text.ng-binding')
-	  .wait(3000)
-	  .click('#transfer-button > span')
-	  .catch(function (error) {
-	    console.error('Search failed:', error);
-	  });
+console.log(dropDownPath)
+
+		nightmare
+		  .wait('#transfer-button > span')
+		  .wait(3000)
+		  .type('#input_6', 0.001)
+		  .wait(3000)
+		  .click('#select_option_7 > div.md-text.ng-binding')
+		  .wait(3000)
+		  .click(dropDownPath)
+		  .wait(3000)
+		  .click('#transfer-button > span')
+		  .catch(function (error) {
+		    console.error('nightmare transaction error:', error);
+		});
+
 }
