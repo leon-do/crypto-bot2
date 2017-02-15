@@ -137,7 +137,7 @@ function nightmareTransaction(highestCoin, lowestCoin){
 		
 		var dropDownArray = ['USD', 'BTC', 'ETH', 'XRP', 'LTC', 'XMR', 'ETC', 'DASH', 'MAID', 'DOGE', 'ZEC', 'LSK']
 		
-		var pathNumber = dropDownArray.indexOf(highestCoin.name) + 14
+		var pathNumber = dropDownArray.indexOf(highestCoin.name) + 13
 
 		var dropDownPath ='#select_option_' + pathNumber + ' > div.md-text.ng-binding'
 
