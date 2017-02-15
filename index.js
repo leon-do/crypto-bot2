@@ -1,3 +1,17 @@
+/* =============================================================
+// =============================================================
+
+
+	This bot transacts highest % change every 30 seconds
+
+
+// =============================================================
+// ============================================================= */ 
+
+
+
+
+
 var request = require("request")
 var rp = require('request-promise');
 var MongoClient = require('mongodb').MongoClient
@@ -146,6 +160,7 @@ console.log(dropDownPath)
 		nightmare
 		  .wait('#transfer-button > span')
 		  .wait(3000)
+		  .type('#input_6', "")
 		  .type('#input_6', 0.001)
 		  .wait(3000)
 		  .click('#select_option_7 > div.md-text.ng-binding')
