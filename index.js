@@ -22,13 +22,13 @@ var nightmare = Nightmare({ show: true });
 // ================LOG USING NIGHTMARE=============================================
 nightmare
 	  .goto('http://localhost:8000') //go to site
-	  .wait('body > a:nth-child(1)') //wait link appears on the screen
+	  .wait('body > div.container > a:nth-child(1)') //wait login appears on the screen
 	  .wait(3000)
-	  .click('body > a:nth-child(1)') // click link
-	  .wait('body > ng-view > form > div:nth-child(3) > input[type="submit"]') //wait until button appears on screen
-	  .type('body > ng-view > form > div:nth-child(1) > input', "leon")
-	  .type('body > ng-view > form > div:nth-child(2) > input', 'password')
-	  .click('body > ng-view > form > div:nth-child(3) > input[type="submit"]')
+	  .click('body > div.container > a:nth-child(1)') // click login
+	  .wait('body > div.container > ng-view > form > div:nth-child(3) > input[type="submit"]') //wait until button appears on screen
+	  .type('body > div.container > ng-view > form > div:nth-child(1) > input', "leon")
+	  .type('body > div.container > ng-view > form > div:nth-child(2) > input', 'password')
+	  .click('body > div.container > ng-view > form > div:nth-child(3) > input[type="submit"]')
 
 
 // ================CRON=============================================
@@ -136,7 +136,9 @@ function mongoMath(db){
 		// { name: 'BTC', change: -0.006667927269832153 } 
 		console.log(lowestCoin)	
 
-		nightmareTransaction(highestCoin,lowestCoin)
+		if (highestCoin.change !== 0 || lowestCoin.chnage !== 0){
+			nightmareTransaction(highestCoin,lowestCoin)
+		}
 
 	})
 
@@ -149,9 +151,9 @@ function mongoMath(db){
 
 function nightmareTransaction(highestCoin, lowestCoin){
 		
-		var dropDownArray = ['ZEC', 'DOGE', 'MAID', 'DASH', 'ETC', 'XMR', 'LTC', 'XRP', 'ETH', 'BTC', 'USD']
+		var dropDownArray = ['LSK', 'ZEC','DOGE', 'MAID', 'DASH', 'ETC', 'XMR', 'LTC', 'XRP', 'ETH', 'BTC', 'USD']
 		
-		var pathNumber = dropDownArray.indexOf(highestCoin.name) + 9
+		var pathNumber = dropDownArray.indexOf(highestCoin.name) + 10
 
 		var dropDownPath ='#select_option_' + pathNumber + ' > div.md-text.ng-binding'
 
@@ -159,20 +161,23 @@ function nightmareTransaction(highestCoin, lowestCoin){
 		  .wait('#transfer-button > span')
 		  .wait(3000)
 		  .evaluate(function(){
-		  	// FIX THIS
+		  	// FROM SELECTOR
 		  	return document.querySelector('#select_option_7 > div.md-text.ng-binding').innerHTML
 		  })
 		  .then(function(result){
 		  	var input = result.trim().split(' ')[1]
 		  	return nightmare
-		  	.type('#input_6', "")
-			.type('#input_6', input)
+		  	.type('#input_6', "")		//clears amount to transfer
+			.type('#input_6', input)	// enters amout to transfer
 			.wait(3000)
-			.click('#select_option_20 > div.md-text.ng-binding')
+			.click('#select_option_7 > div.md-text.ng-binding') // TO dropdown
 			.wait(3000)
-			.click(dropDownPath)
+			.click(dropDownPath)	// from dropdown
+			.click('#input_6')		// click input to close dropdown
 			.wait(3000)
-			.click('#transfer-button > span')		  
+			.click('#transfer-button > span')	
+			.wait(3000)
+			//.refresh()	  
 		  })
 		  .catch(function (error) {
 		    console.error('nightmare transaction error:', error);
