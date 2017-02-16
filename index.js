@@ -10,7 +10,7 @@
 
 
 
-
+//https://github.com/rosshinkley/nightmare-examples/blob/master/docs/beginner/promises.md
 
 var request = require("request")
 var rp = require('request-promise');
@@ -149,25 +149,31 @@ function mongoMath(db){
 
 function nightmareTransaction(highestCoin, lowestCoin){
 		
-		var dropDownArray = ['USD', 'BTC', 'ETH', 'XRP', 'LTC', 'XMR', 'ETC', 'DASH', 'MAID', 'DOGE', 'ZEC', 'LSK']
+		var dropDownArray = ['ZEC', 'DOGE', 'MAID', 'DASH', 'ETC', 'XMR', 'LTC', 'XRP', 'ETH', 'BTC', 'USD']
 		
-		var pathNumber = dropDownArray.indexOf(highestCoin.name) + 13
+		var pathNumber = dropDownArray.indexOf(highestCoin.name) + 9
 
 		var dropDownPath ='#select_option_' + pathNumber + ' > div.md-text.ng-binding'
-
-console.log(dropDownPath)
 
 		nightmare
 		  .wait('#transfer-button > span')
 		  .wait(3000)
-		  .type('#input_6', "")
-		  .type('#input_6', 0.001)
-		  .wait(3000)
-		  .click('#select_option_7 > div.md-text.ng-binding')
-		  .wait(3000)
-		  .click(dropDownPath)
-		  .wait(3000)
-		  .click('#transfer-button > span')
+		  .evaluate(function(){
+		  	// FIX THIS
+		  	return document.querySelector('#select_option_7 > div.md-text.ng-binding').innerHTML
+		  })
+		  .then(function(result){
+		  	var input = result.trim().split(' ')[1]
+		  	return nightmare
+		  	.type('#input_6', "")
+			.type('#input_6', input)
+			.wait(3000)
+			.click('#select_option_20 > div.md-text.ng-binding')
+			.wait(3000)
+			.click(dropDownPath)
+			.wait(3000)
+			.click('#transfer-button > span')		  
+		  })
 		  .catch(function (error) {
 		    console.error('nightmare transaction error:', error);
 		});
