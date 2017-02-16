@@ -136,7 +136,7 @@ function mongoMath(db){
 		// { name: 'BTC', change: -0.006667927269832153 } 
 		console.log(lowestCoin)	
 
-		if (highestCoin.change !== 0 || lowestCoin.chnage !== 0){
+		if (highestCoin.change !== 0 || lowestCoin.change !== 0){
 			nightmareTransaction(highestCoin,lowestCoin)
 		}
 
